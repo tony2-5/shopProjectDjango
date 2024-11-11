@@ -11,7 +11,7 @@ function ProtectedRoute({children}) {
   useEffect(() => {
     // call auth function on component render
     auth().catch(()=>setIsAuthorized(false))
-  }, [])
+  })
 
   // if jwt token expired function to get new jwt access token
   const refreshToken = async () => {
