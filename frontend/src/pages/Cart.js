@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import api from "../api"
+import NavBar from "../components/NavBar";
 import {useNavigate} from "react-router-dom"
 
 
@@ -7,9 +8,8 @@ export default function Cart() {
   const navigate = useNavigate()
   const [cart,setCartItems] = useState(null)
   const initializeCart = async () => {
-    const res = await api.post('/api/createcart/')
-    console.log(res)
     const res2 = await api.get('/api/displaycart/')
+    console.log(res2)
     // get product id's from cart
     setCartItems(res2.data[0].product)
   }
@@ -24,15 +24,18 @@ export default function Cart() {
     console.log(cart)
   },[cart])
   return (
-    <div>
-      {
-        cart && cart.map((product) => (
-          <ul>
-            <li>{product}</li>
-            <button onClick={()=>deleteFromCart(product)}></button>
-          </ul>
-        ))
-      }
-    </div>
+    <>
+      <NavBar></NavBar>
+      <div>
+        {/* {
+          cart && cart.map((product) => (
+            <ul>
+              <li>{product}</li>
+              <button onClick={()=>deleteFromCart(product)}></button>
+            </ul>
+          ))
+        } */}
+      </div>
+    </>
   )
 }

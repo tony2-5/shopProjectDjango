@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from api.views import CreateUserView, CreateCart, AddProductToCart, DeleteProductFromCart, GetProducts,DisplayCart
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -13,4 +13,4 @@ urlpatterns = [
     path("api/addcartproduct/",AddProductToCart.as_view(),name="create-cartproduct"),
     path("api/deletecartproduct/",DeleteProductFromCart.as_view(),name="delete-cartproduct"),
     path("api/displayproducts/",GetProducts.as_view(),name="display-products"),
-]
+] 

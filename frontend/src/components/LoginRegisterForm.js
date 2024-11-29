@@ -27,28 +27,34 @@ export default function LoginRegisterForm({method}) {
     <form onSubmit={submit}> 
       {
       method==='register' && 
-        <>
+        <div>
           <label for='email'>Email</label>
           <input 
             type='text' 
             name='email'
             onChange={(e)=>setEmail(e.target.value)}
           />
-        </>
+        </div>
       }
-      <label for='username'>Username</label>
-      <input 
-        type='text' 
-        name='username'
-        onChange={(e)=>setUsername(e.target.value)}
-      />
-      <label for='password'>Password</label>
-      <input 
-        type='password' 
-        name='password'
-        onChange={(e)=>setPassword(e.target.value)}
-      />
-      {method === 'login' ? <button type='submit'>Login</button> : <button type='submit'>Login</button>}
+      <div>
+        <label for='username'>Username</label>
+        <input 
+          type='text' 
+          name='username'
+          onChange={(e)=>setUsername(e.target.value)}
+        />
+      </div>
+      <div>
+        <label for='password'>Password</label>
+        <input 
+          type='password' 
+          name='password'
+          onChange={(e)=>setPassword(e.target.value)}
+        />
+      </div>
+      <div>
+        {method === 'login' ? <button type='submit'>Login</button> : <button type='submit'>Login</button>}
+      </div>
     </form>
   )
 }
