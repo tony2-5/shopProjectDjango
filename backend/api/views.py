@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .models import Product, Cart
-from .serializers import UserSerializer, CartSerializer, ProductSerializer
+from .models import Product, Cart, CartProduct
+from .serializers import UserSerializer, CartSerializer, ProductSerializer, CartProductSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 # Create your views here.
 
@@ -25,24 +25,29 @@ class CreateCart(generics.CreateAPIView):
       serializer.save(user=self.request.user)
 
 class DisplayCart(generics.ListAPIView):
-  serializer_class = CartSerializer
+  serializer_class = CartProductSerializer
   permission_classes = [IsAuthenticated]
 
   def get_queryset(self):
-    return Cart.objects.filter(user=self.request.user)
+    try:
+      cart = Cart.objects.get(user=self.request.user)
+    except Cart.DoesNotExist:
+      return CartProduct.objects.none()
+  
+    return CartProduct.objects.filter(cart=cart)
   
 ''' 
 defining update functionalities in views with post instead of serializer update()
 because need seperate update functionality for adding and removing products
 '''
-#TODO: test these
 class AddProductToCart(generics.GenericAPIView):
-  serializer_class = CartSerializer
+  serializer_class = CartProductSerializer
   permission_classes = [IsAuthenticated]
 
   def post(self, request):
     user = request.user
     product_id = request.data.get('product')
+    quantity = request.data.get('quantity')
 
     try:
       product = Product.objects.get(id=product_id)
@@ -54,11 +59,20 @@ class AddProductToCart(generics.GenericAPIView):
     except Cart.DoesNotExist:
       return HttpResponse({"Cart not found."}, status=400)
     
-    cart.product.add(product) 
+    cartProduct, created = CartProduct.objects.get_or_create(
+      cart=cart,
+      product=product,
+      defaults={'quantity': quantity}
+    )
+
+    if not created:
+      cartProduct.quantity += quantity
+      cartProduct.save()
+
     return HttpResponse("Product added to cart.", status=200)
     
 class DeleteProductFromCart(generics.GenericAPIView):
-  serializer_class = CartSerializer
+  serializer_class = CartProductSerializer
   permission_classes = [IsAuthenticated]
 
   def post(self, request):
@@ -75,10 +89,12 @@ class DeleteProductFromCart(generics.GenericAPIView):
     except Cart.DoesNotExist:
       return HttpResponse("Cart not found.", status=400)
 
-    if product not in cart.product.all():
+    try:
+      cart_product = CartProduct.objects.get(cart=cart, product=product)
+    except CartProduct.DoesNotExist:
       return HttpResponse("Product not in cart.", status=400)
 
-    cart.product.remove(product)
+    cart_product.delete()
     return HttpResponse("Product removed from cart.", status=200)
 
 class GetProducts(generics.ListAPIView):
