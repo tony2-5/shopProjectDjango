@@ -13,11 +13,11 @@ export default function Thankyou() {
   },[location])
 
   return (
-    <div class="d-flex justify-content-center align-items-center vh-100">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Thank you for shopping!</h5>
-          <p class="card-text d-flex justify-content-center">Transaction Total: ${total}</p>
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="card">
+        <div className="card-body">
+          <h5 className="card-title">Thank you for shopping!</h5>
+          <p className="card-text d-flex justify-content-center">Transaction Total: ${total}</p>
         </div>
         <div className="form-group d-flex justify-content-center p-2">
           <button className="btn btn-primary" onClick={()=>{navigate("/")}}>Return to Shop</button>

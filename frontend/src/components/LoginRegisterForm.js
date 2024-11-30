@@ -10,7 +10,6 @@ export default function LoginRegisterForm({method}) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-
   const submit = async (e) => {
     e.preventDefault()
     if(method==='login') {
@@ -23,37 +22,47 @@ export default function LoginRegisterForm({method}) {
       navigate('/login')
     }
   }
+
   return (
-    <form onSubmit={submit}> 
-      {
-      method==='register' && 
-        <div>
-          <label for='email'>Email</label>
+    <form className="d-flex justify-content-center align-items-center h-75" onSubmit={submit}> 
+      <div className="card p-4">
+        {
+        method==='register' && 
+          <div className="form-group pb-2">
+            <label for='email'>Email</label>
+            <input 
+              className="form-control"
+              type='text' 
+              name='email'
+              onChange={(e)=>setEmail(e.target.value)}
+            />
+          </div>
+        }
+        <div className="form-group pb-2">
+          <label for='username'>Username</label>
           <input 
+            className="form-control"
             type='text' 
-            name='email'
-            onChange={(e)=>setEmail(e.target.value)}
+            name='username'
+            onChange={(e)=>setUsername(e.target.value)}
           />
         </div>
-      }
-      <div>
-        <label for='username'>Username</label>
-        <input 
-          type='text' 
-          name='username'
-          onChange={(e)=>setUsername(e.target.value)}
-        />
-      </div>
-      <div>
-        <label for='password'>Password</label>
-        <input 
-          type='password' 
-          name='password'
-          onChange={(e)=>setPassword(e.target.value)}
-        />
-      </div>
-      <div>
-        {method === 'login' ? <button type='submit'>Login</button> : <button type='submit'>Login</button>}
+        <div className="form-group pb-2">
+          <label for='password'>Password</label>
+          <input
+            className="form-control" 
+            type='password' 
+            name='password'
+            onChange={(e)=>setPassword(e.target.value)}
+          />
+        </div>
+        <div className="form-group p-2 d-flex justify-content-center">
+          {method === 'login' ? 
+          <button className="btn btn-primary" type='submit'>Login</button> 
+          : 
+            <button className="btn btn-primary" type='submit'>Login</button>
+          }
+        </div>
       </div>
     </form>
   )
