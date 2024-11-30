@@ -46,13 +46,13 @@ class AddProductToCart(generics.GenericAPIView):
 
   def post(self, request):
     user = request.user
-    product_id = request.data.get('product')
+    productId = request.data.get('product')
     quantity = request.data.get('quantity')
 
     try:
-      product = Product.objects.get(id=product_id)
+      product = Product.objects.get(id=productId)
     except Product.DoesNotExist:
-      return HttpResponse(f"{product_id} Product not found.", status=400)
+      return HttpResponse(f"{productId} Product not found.", status=400)
 
     try:
       cart = Cart.objects.get(user=user)
@@ -66,8 +66,12 @@ class AddProductToCart(generics.GenericAPIView):
     )
 
     if not created:
-      cartProduct.quantity += quantity
+      cartProduct.quantity += int(quantity)
       cartProduct.save()
+
+    # update product stock
+    product.stock -= int(quantity)
+    product.save()
 
     return HttpResponse("Product added to cart.", status=200)
     
@@ -77,10 +81,10 @@ class DeleteProductFromCart(generics.GenericAPIView):
 
   def post(self, request):
     user = request.user
-    product_id = request.data.get("product")
+    productId = request.data.get("product")
 
     try:
-      product = Product.objects.get(id=product_id)
+      product = Product.objects.get(id=productId)
     except Product.DoesNotExist:
       return HttpResponse("Product not found.", status=400)
 
@@ -93,11 +97,44 @@ class DeleteProductFromCart(generics.GenericAPIView):
       cart_product = CartProduct.objects.get(cart=cart, product=product)
     except CartProduct.DoesNotExist:
       return HttpResponse("Product not in cart.", status=400)
-
+    
+    #add stock back to product
+    product.stock += cart_product.quantity
+    product.save()
     cart_product.delete()
+
     return HttpResponse("Product removed from cart.", status=200)
 
 class GetProducts(generics.ListAPIView):
   serializer_class = ProductSerializer
   permission_classes = [IsAuthenticated]
   queryset = Product.objects.all()
+
+class Checkout(generics.GenericAPIView):
+  serializer_class = CartProductSerializer
+  permission_classes = [IsAuthenticated]
+
+  # same as deleting from cart except product stock is not added back and taking array of product ids
+  def post(self, request):
+    user = request.user
+    productIds = request.data.get("products")
+
+    try:
+      cart = Cart.objects.get(user=user)
+    except Cart.DoesNotExist:
+      return HttpResponse("Cart not found.", status=400)
+
+    for productId in productIds:
+      try:
+        product = Product.objects.get(id=productId)
+      except Product.DoesNotExist:
+        return HttpResponse("Missing product.", status=400)
+      
+      try:
+        cart_product = CartProduct.objects.get(cart=cart, product=product)
+      except CartProduct.DoesNotExist:
+        return HttpResponse("Product not in cart.", status=400)
+    
+      cart_product.delete()
+
+    return HttpResponse("Checked out successfully.", status=200)
