@@ -21,6 +21,7 @@ function ProtectedRoute({children}) {
       if(res.status === 200) {
         localStorage.setItem(ACCESS_TOKEN, res.data.access)
         setIsAuthorized(true)
+        window.document.refresh()
       }
     } catch(error) {
       console.log(error)
