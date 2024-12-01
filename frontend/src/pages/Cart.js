@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom"
 export default function Cart() {
   const [cart,setCartItems] = useState(null)
   const [total, setTotal] = useState(0)
+  const [totalItems, setTotalItems] = useState(0)
   const navigate = useNavigate()
 
   const initializeCart = async () => {
@@ -34,8 +35,15 @@ export default function Cart() {
   useEffect(()=>{
     initializeCart()
   },[])
+
   useEffect(()=> {
     if(cart) {
+      // for cart count indicator in navbar
+      let cartItemTotal = cart.reduce((accumualtor, product)=>{
+        return accumualtor+=product[1]
+      },0)
+      setTotalItems(cartItemTotal)
+
       let newTotal = cart.reduce((accumualtor, product)=>{
         return accumualtor+=product[1]*parseFloat(product[0].price)
       },0)
@@ -45,7 +53,7 @@ export default function Cart() {
 
   return (
     <>
-      <NavBar></NavBar>
+      <NavBar totalItems={totalItems}></NavBar>
       <div className="container">
         <div className="row p-3 justify-content-between">
           <div className="col-6">
