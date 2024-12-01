@@ -2,7 +2,7 @@ import React from "react";
 import { ACCESS_TOKEN } from "../constants";
 import { Link } from 'react-router-dom';
 
-export default function NavBar() {
+export default function NavBar({totalItems}) {
   const accessToken = localStorage.getItem(ACCESS_TOKEN)
   return (
     <nav className="navbar navbar-light">
@@ -12,7 +12,7 @@ export default function NavBar() {
             <Link className="nav-link" to="/">Product Page</Link>
           </div>
           <div className="nav-item">
-            <Link className="nav-link" to="/cart">Cart</Link>
+            <Link className="nav-link" to="/cart">Cart {totalItems>0 && `(${totalItems})`}</Link>
           </div>
           {!accessToken && 
             <div className="nav-item">
