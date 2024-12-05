@@ -32,7 +32,6 @@ export default function Products() {
   }
 
   const getCart = async () => {
-    await api.post('/api/createcart/')
     const res = await api.get('/api/displaycart/')
     let cartItemTotal = res.data.reduce((accumualtor, product)=>{
       return accumualtor+=product.quantity

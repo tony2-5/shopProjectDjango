@@ -9,17 +9,27 @@ export default function LoginRegisterForm({method}) {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [errorMessage, setError] = useState('')
 
   const submit = async (e) => {
     e.preventDefault()
     if(method==='login') {
-      const res = await api.post('/api/token/',{ username, password })
-      localStorage.setItem(ACCESS_TOKEN, res.data.access)
-      localStorage.setItem(REFRESH_TOKEN, res.data.refresh)
-      navigate('/')
+      try {
+        const res = await api.post('/api/token/',{ username, password })
+        console.log(res)
+        localStorage.setItem(ACCESS_TOKEN, res.data.access)
+        localStorage.setItem(REFRESH_TOKEN, res.data.refresh)
+        navigate('/')
+      } catch(error) {
+        setError(error.response.data.detail)
+      }
     } else {
-      await api.post('/api/user/register/',{ username, email, password })
-      navigate('/login')
+      try {
+        await api.post('/api/user/register/', { username, email, password })
+        navigate('/login')
+      } catch(error) {
+        setError(error.response.data.username)
+      }
     }
   }
 
@@ -60,9 +70,10 @@ export default function LoginRegisterForm({method}) {
           {method === 'login' ? 
           <button className="btn btn-primary" type='submit'>Login</button> 
           : 
-            <button className="btn btn-primary" type='submit'>Login</button>
+          <button className="btn btn-primary" type='submit'>Register</button>
           }
         </div>
+        {errorMessage && <div className="text-danger">{errorMessage}</div>}
       </div>
     </form>
   )
