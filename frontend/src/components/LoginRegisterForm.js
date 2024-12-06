@@ -28,7 +28,11 @@ export default function LoginRegisterForm({method}) {
         await api.post('/api/user/register/', { username, email, password })
         navigate('/login')
       } catch(error) {
-        setError(error.response.data.username)
+        if(error.response.data.username) {
+          setError(error.response.data.username)
+        } else if(error.response.data.email) {
+          setError(error.response.data.email)
+        } 
       }
     }
   }

@@ -9,10 +9,6 @@ class Product(models.Model):
   image = models.ImageField(upload_to="static",blank=True)
 
 class Cart(models.Model):
-  user = models.OneToOneField(
-    User,
-    on_delete=models.CASCADE,
-    primary_key=True
-  )
+  user = models.ForeignKey(User,on_delete=models.CASCADE)
   product = models.ForeignKey(Product, on_delete=models.CASCADE)
   quantity = models.IntegerField(default=0)

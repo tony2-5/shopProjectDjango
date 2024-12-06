@@ -17,7 +17,7 @@ export default function Cart() {
   }
 
   const deleteFromCart = async (id) => {
-    const res = await api.post('/api/deletecartproduct/',{"product":id})
+    await api.post('/api/deletecartproduct/',{"product":id})
     const res2 = await api.get('/api/displaycart/')
     setCartItems(res2.data.map(d=>[d.product, d.quantity]))
   }
@@ -63,7 +63,7 @@ export default function Cart() {
                   <div className="col-6 p-3">
                     <ul className="list-group">
                       <li className="list-group-item d-flex justify-content-center">Product: {product[0].productName}</li>
-                      <li className="list-group-item d-flex justify-content-center"><img className="img-fluid" src={product[0].image}></img></li>
+                      <li className="list-group-item d-flex justify-content-center"><img className="img-fluid" alt={product[0].productName} src={product[0].image}></img></li>
                       <li  className="list-group-item d-flex justify-content-center">Quantity: {product[1]}</li>
                       <button  className="list-group-item list-group-item-action bg-primary d-flex justify-content-center" 
                       onClick={()=>deleteFromCart(product[0].id)}>

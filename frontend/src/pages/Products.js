@@ -24,7 +24,8 @@ export default function Products() {
     // search
     if(search) {
       setProducts(res.data.filter((product)=>
-        new RegExp(search,"g").test(product.productName)
+        // sanitizing the special characters from the input string
+        new RegExp(search.replace(/[-\/\\^$*+?.()|[\]{}]/g,''),"i").test(product.productName)
       ))
     } else {
       setProducts(res.data)
@@ -104,7 +105,7 @@ export default function Products() {
               <li className="list-group-item d-flex justify-content-center">{product.productName}</li>
               <li className="list-group-item d-flex justify-content-center">${product.price}</li>
               <li className="list-group-item d-flex justify-content-center">Stock: {product.stock}</li>
-              <li className="list-group-item d-flex justify-content-center"><img className="img-fluid" src={product.image}></img></li>
+              <li className="list-group-item d-flex justify-content-center"><img alt={product.productName} className="img-fluid" src={product.image}></img></li>
               <input
                 type="number"
                 min="1"
