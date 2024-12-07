@@ -1,5 +1,6 @@
 # Project Setup
 ## Backend Setup
+* Note: This project was made using python version `3.13.0`
 1. Create a python virtual environment with: `python3 -m venv venv`
 2. Activate the virtual environment. With mac the command is `source venv/bin/activate` for Windows using cmd.exe it should be `venv\Scripts\activate.bat`
 3. Install the project requirements using `pip install -r requirements.txt`
