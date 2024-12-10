@@ -16,7 +16,6 @@ export default function LoginRegisterForm({method}) {
     if(method==='login') {
       try {
         const res = await api.post('/api/token/',{ username, password })
-        console.log(res)
         localStorage.setItem(ACCESS_TOKEN, res.data.access)
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh)
         navigate('/')

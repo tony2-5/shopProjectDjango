@@ -11,15 +11,15 @@ export default function Cart() {
   const navigate = useNavigate()
 
   const initializeCart = async () => {
-    const res2 = await api.get('/api/displaycart/')
+    const res = await api.get('/api/displaycart/')
     // get product id's from cart
-    setCartItems(res2.data.map(d=>[d.product, d.quantity]))
+    setCartItems(res.data.map(d=>[d.product, d.quantity]))
   }
 
   const deleteFromCart = async (id) => {
     await api.post('/api/deletecartproduct/',{"product":id})
-    const res2 = await api.get('/api/displaycart/')
-    setCartItems(res2.data.map(d=>[d.product, d.quantity]))
+    const res = await api.get('/api/displaycart/')
+    setCartItems(res.data.map(d=>[d.product, d.quantity]))
   }
 
   const checkOut = async () => {
@@ -40,6 +40,7 @@ export default function Cart() {
     if(cart) {
       // for cart count indicator in navbar
       let cartItemTotal = cart.reduce((accumualtor, product)=>{
+        // product[1] = product quantity
         return accumualtor+=product[1]
       },0)
       setTotalItems(cartItemTotal)
@@ -64,8 +65,8 @@ export default function Cart() {
                     <ul className="list-group">
                       <li className="list-group-item d-flex justify-content-center">Product: {product[0].productName}</li>
                       <li className="list-group-item d-flex justify-content-center"><img className="img-fluid" alt={product[0].productName} src={product[0].image}></img></li>
-                      <li  className="list-group-item d-flex justify-content-center">Quantity: {product[1]}</li>
-                      <button  className="list-group-item list-group-item-action bg-primary d-flex justify-content-center" 
+                      <li className="list-group-item d-flex justify-content-center">Quantity: {product[1]}</li>
+                      <button className="list-group-item list-group-item-action bg-primary d-flex justify-content-center" 
                       onClick={()=>deleteFromCart(product[0].id)}>
                         Delete
                       </button>

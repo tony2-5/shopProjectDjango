@@ -7,6 +7,7 @@ export default function Thankyou() {
   const navigate = useNavigate()
   
   useEffect(()=>{
+    // retrieving state passed by cart when navigated
     if(location.state.total) {
       setTotal(location.state.total)
     }

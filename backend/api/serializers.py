@@ -19,8 +19,7 @@ class ProductSerializer(serializers.ModelSerializer):
     fields = ['id',"created","productName","price","stock","image"]
     
 class CartSerializer(serializers.ModelSerializer):
-  # user will be dynamically added to object in view not passed as argument
-  user = UserSerializer(read_only=True)
+  user = UserSerializer()
   product = ProductSerializer()
   class Meta:
     model=Cart

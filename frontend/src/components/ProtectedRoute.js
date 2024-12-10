@@ -24,7 +24,6 @@ function ProtectedRoute({children}) {
         window.document.refresh()
       }
     } catch(error) {
-      console.log(error)
       setIsAuthorized(false)
     }
   }

@@ -38,15 +38,12 @@ class AddProductToCart(generics.GenericAPIView):
     except Product.DoesNotExist:
       return HttpResponse(f"{productId} Product not found.", status=400)
     
-    cartProduct, created = Cart.objects.get_or_create(
-      user=user,
-      product=product,
-      defaults={'quantity': quantity}
-    )
-
-    if not created:
+    try:
+      cartProduct = Cart.objects.get(user=user, product=product)
       cartProduct.quantity += int(quantity)
       cartProduct.save()
+    except Cart.DoesNotExist:
+      Cart.objects.create(user=user,product=product,quantity=quantity)
 
     # update product stock
     product.stock -= int(quantity)
